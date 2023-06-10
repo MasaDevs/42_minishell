@@ -1,0 +1,1809 @@
+COMMAND
+ /bin/pwd
+ RESULT
+1d0
+< /home/masahitoarai/Documents/42_minishell
+COMMAND
+ /bin/echo
+ RESULT
+1d0
+< 
+COMMAND
+ /bin/ls
+ RESULT
+1,14d0
+< a.out
+< cmp
+< exit42
+< include
+< leak.sh
+< libmshell
+< Makefile
+< out
+< print_args
+< print.c
+< result
+< srcs
+< test2.sh
+< test.sh
+COMMAND
+ pwd
+ RESULT
+1d0
+< /home/masahitoarai/Documents/42_minishell
+COMMAND
+ echo
+ RESULT
+1d0
+< 
+COMMAND
+ ls
+ RESULT
+1,14d0
+< a.out
+< cmp
+< exit42
+< include
+< leak.sh
+< libmshell
+< Makefile
+< out
+< print_args
+< print.c
+< result
+< srcs
+< test2.sh
+< test.sh
+COMMAND
+ ./a.out
+ RESULT
+1d0
+< hello from a.out
+COMMAND
+ ls /
+ RESULT
+1,24d0
+< bin
+< boot
+< dev
+< etc
+< home
+< lib
+< lib32
+< lib64
+< libx32
+< lost+found
+< media
+< mnt
+< opt
+< proc
+< recovery
+< root
+< run
+< sbin
+< snap
+< srv
+< sys
+< tmp
+< usr
+< var
+COMMAND
+ echo hello    world     
+ RESULT
+1d0
+< hello world
+COMMAND
+ ./print_args 'hello   world' '42Tokyo'
+ RESULT
+1,3d0
+< argv[0] = ./print_args
+< argv[1] = hello   world
+< argv[2] = 42Tokyo
+COMMAND
+ echo 'hello   world' '42Tokyo'
+ RESULT
+1d0
+< hello   world 42Tokyo
+COMMAND
+ echo '"hello   world"' '42Tokyo'
+ RESULT
+1d0
+< "hello   world" 42Tokyo
+COMMAND
+ ./print_args "hello   world" "42Tokyo"
+ RESULT
+1,3d0
+< argv[0] = ./print_args
+< argv[1] = hello   world
+< argv[2] = 42Tokyo
+COMMAND
+ echo "hello   world" "42Tokyo"
+ RESULT
+1d0
+< hello   world 42Tokyo
+COMMAND
+ echo "'hello   world'" "42Tokyo"
+ RESULT
+1d0
+< 'hello   world' 42Tokyo
+COMMAND
+ echo hello'      world'
+ RESULT
+1d0
+< hello      world
+COMMAND
+ echo hello'  world  '"  42Tokyo  "
+ RESULT
+1d0
+< hello  world    42Tokyo  
+COMMAND
+ cat <Makefile
+ RESULT
+1,108d0
+< NAME 		=	minishell
+< CC			=	cc
+< 
+< # CFLAGS		=	-Wall -Wextra -Werror -g -fsanitize=address
+< # CFLAGS		=	-Wall -Wextra -Werror -g -fsanitize=leak
+< CFLAGS		=	-Wall -Wextra -Werror
+< INCLUDE		=	-I ./include/
+< # SRCS		= srcs/main.c\
+< # 			  srcs/exe/exe.c
+< SRCS		= $(shell find srcs/ -name "*.c" )
+< 
+< 
+< OBJDIR   = obj
+< OBJS  = $(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
+< 
+< 
+< 
+< $(OBJDIR)/%.o: %.c
+< 	@mkdir -p $$(dirname $@)
+< 	$(CC) $(INCLUDE) $(CFLAGS) -o $@ -c $<
+< 
+< all: $(NAME)
+< 
+< $(NAME):$(OBJS)
+< 	@mkdir -p .heredoc
+< 	$(CC) $^ $(CFLAGS) -o $@ -lreadline
+< 
+< #$(NAME):$(OBJS)
+< #	@mkdir -p .heredoc
+< #	make -C libmshell
+< #	$(CC) $^ $(CFLAGS) libmshell/libmshell.a -o $@ -lreadline
+< leak :
+< 	sh leak.sh
+< 
+< clean:
+< 	$(RM) -r $(OBJDIR)
+< 	$(RM) .*.heredoc
+< 	$(RM) ./.heredoc/.*.heredoc
+< 
+< fclean: clean
+< 	$(RM) $(NAME)
+< 
+< re : fclean all
+< 	./minishell
+< 
+< t : all
+< 	sh test.sh
+< 
+< var:
+< 	rm -f log/log.txt
+< 	valgrind --leak-check=full --show-leak-kinds=all -s -q ./minishell
+< varl:
+< 	rm -f log/log.txt
+< 	valgrind --log-file="log/log.txt" --leak-check=full --show-leak-kinds=all -s -q ./minishell
+< 
+< 
+< 
+< test:
+< 	$(RM) -f a.out cpm exit42 infinite_loop out print_args result 
+< 	@make --no-print-directory
+< 	sleep 1;
+< 	bash test.sh
+< 
+< # t:
+< # 	make all
+< # 	make -C minishell-tester
+< # 	./minishell
+< # 	make test -C minishell-tester
+< 
+< # tc:
+< # 	make fclean -C minishell-tester
+< 
+< # ret:tc t
+< 
+< # test :
+< # 	@mkdir -p log
+< # 	testcase
+< 
+< # echo:
+< # 	make echo -C minishell-tester
+< 
+< # exit:
+< # 	make exit -C minishell-tester
+< # path:
+< # 	make path -C minishell-tester
+< # redirect:
+< # 	make redirect -C minishell-tester
+< 
+< # syntax_error:
+< # 	make syntax_error -C minishell-tester
+< 
+< # env:
+< # 	make env -C minishell-tester
+< 
+< # exp:
+< # 	make exp -C minishell-tester
+< 
+< # pwd:
+< # 	make pwd -C minishell-tester
+< 
+< # simple:
+< # 	make simple -C minishell-tester
+< 
+< # unset:
+< # 	make unset -C minishell-tester
+< 
+< .PHONY:
+< 		all clean fclean re libft t
+COMMAND
+ cat <f1<f2<f3
+ RESULT
+1d0
+< 42Tokyo
+COMMAND
+ cat <<EOF
+hello
+world
+EOF
+NOPRINT
+ RESULT
+1,2d0
+< hello
+< world
+COMMAND
+ cat <<EOF
+hello
+world
+ RESULT
+1,2d0
+< hello
+< world
+COMMAND
+ cat <<E"O"F
+hello
+world
+EOF
+NOPRINT
+ RESULT
+1,2d0
+< hello
+< world
+COMMAND
+ cat <<EOF   
+$USER
+$NO_SUCH_VAR
+$FOO$BAR
+EOF
+ RESULT
+1,3d0
+< masahitoarai
+< 
+< 
+COMMAND
+ cat <<"EOF" 
+$USER
+$NO_SUCH_VAR
+$FOO$BAR
+EOF
+ RESULT
+1,3d0
+< $USER
+< $NO_SUCH_VAR
+< $FOO$BAR
+COMMAND
+ cat <<EO"F" 
+$USER
+$NO_SUCH_VAR
+$FOO$BAR
+EOF
+ RESULT
+1,3d0
+< $USER
+< $NO_SUCH_VAR
+< $FOO$BAR
+COMMAND
+ cat <<$EOF         
+eof
+$EOF
+EOF
+ RESULT
+1d0
+< eof
+COMMAND
+ cat <<"$EOF"       
+eof
+$EOF
+EOF
+ RESULT
+1d0
+< eof
+COMMAND
+ cat Makefile | grep minishell
+ RESULT
+1,18d0
+< NAME 		=	minishell
+< 	./minishell
+< 	valgrind --leak-check=full --show-leak-kinds=all -s -q ./minishell
+< 	valgrind --log-file="log/log.txt" --leak-check=full --show-leak-kinds=all -s -q ./minishell
+< # 	make -C minishell-tester
+< # 	./minishell
+< # 	make test -C minishell-tester
+< # 	make fclean -C minishell-tester
+< # 	make echo -C minishell-tester
+< # 	make exit -C minishell-tester
+< # 	make path -C minishell-tester
+< # 	make redirect -C minishell-tester
+< # 	make syntax_error -C minishell-tester
+< # 	make env -C minishell-tester
+< # 	make exp -C minishell-tester
+< # 	make pwd -C minishell-tester
+< # 	make simple -C minishell-tester
+< # 	make unset -C minishell-tester
+COMMAND
+ cat | cat | ls
+
+
+ RESULT
+1,16d0
+< a.out
+< cmp
+< exit42
+< include
+< leak.sh
+< libmshell
+< Makefile
+< no_exec_perm
+< no_read_perm
+< out
+< print_args
+< print.c
+< result
+< srcs
+< test2.sh
+< test.sh
+COMMAND
+ echo $USER
+ RESULT
+1d0
+< masahitoarai
+COMMAND
+ echo $USER$PATH$TERM
+ RESULT
+1d0
+< masahitoarai/home/masahitoarai/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/masahitoarai/.local/binxterm
+COMMAND
+ echo "$USER  $PATH   $TERM"
+ RESULT
+1d0
+< masahitoarai  /home/masahitoarai/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/masahitoarai/.local/bin   xterm
+COMMAND
+ echo $?
+ RESULT
+1d0
+< 0
+COMMAND
+ invalid
+echo $?
+echo $?
+ RESULT
+1,2d0
+< 127
+< 0
+COMMAND
+ exit42
+echo $?
+echo $?
+ RESULT
+1,2d0
+< 127
+< 0
+COMMAND
+ exit42
+
+echo $?
+echo $?
+ RESULT
+1,2d0
+< 127
+< 0
+COMMAND
+ export
+ RESULT
+1,47d0
+< declare -x COLORTERM="truecolor"
+< declare -x DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/1000/bus"
+< declare -x DEFAULTS_PATH="/usr/share/gconf/pop.default.path"
+< declare -x DESKTOP_SESSION="pop"
+< declare -x DISPLAY=":1"
+< declare -x EOF="eof"
+< declare -x GDMSESSION="pop"
+< declare -x GNOME_DESKTOP_SESSION_ID="this-is-deprecated"
+< declare -x GNOME_SHELL_SESSION_MODE="pop"
+< declare -x GNOME_TERMINAL_SCREEN="/org/gnome/Terminal/screen/4c38b80c_03d8_473a_8472_cd41efb5b2de"
+< declare -x GNOME_TERMINAL_SERVICE=":1.407"
+< declare -x GPG_AGENT_INFO="/run/user/1000/gnupg/S.gpg-agent:0:1"
+< declare -x GTK_IM_MODULE="ibus"
+< declare -x GTK_MODULES="gail:atk-bridge:appmenu-gtk-module"
+< declare -x LANG="en_US.UTF-8"
+< declare -x LESSCLOSE="/usr/bin/lesspipe %s %s"
+< declare -x LESSOPEN="| /usr/bin/lesspipe %s"
+< declare -x LOGNAME="masahitoarai"
+< declare -x LS_COLORS="rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:"
+< declare -x MANDATORY_PATH="/usr/share/gconf/pop.mandatory.path"
+< declare -x OLDPWD
+< declare -x PATH="/home/masahitoarai/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/masahitoarai/.local/bin"
+< declare -x PWD="/home/masahitoarai/Documents/42_minishell"
+< declare -x QT_ACCESSIBILITY="1"
+< declare -x QT_IM_MODULE="ibus"
+< declare -x SESSION_MANAGER="local/pop-os:@/tmp/.ICE-unix/2373,unix/pop-os:/tmp/.ICE-unix/2373"
+< declare -x SHELL="/usr/bin/bash"
+< declare -x SHLVL="2"
+< declare -x SSH_AGENT_LAUNCHER="gnome-keyring"
+< declare -x SSH_AUTH_SOCK="/run/user/1000/keyring/ssh"
+< declare -x SYSTEMD_EXEC_PID="17067"
+< declare -x TERM="xterm"
+< declare -x USER="masahitoarai"
+< declare -x USERNAME="masahitoarai"
+< declare -x VTE_VERSION="6800"
+< declare -x WINDOWPATH="2"
+< declare -x XAUTHORITY="/run/user/1000/gdm/Xauthority"
+< declare -x XDG_CONFIG_DIRS="/etc/xdg/xdg-pop:/etc/xdg"
+< declare -x XDG_CURRENT_DESKTOP="pop:GNOME"
+< declare -x XDG_DATA_DIRS="/usr/share/pop:/usr/share/gnome:/home/masahitoarai/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop"
+< declare -x XDG_MENU_PREFIX="gnome-"
+< declare -x XDG_RUNTIME_DIR="/run/user/1000"
+< declare -x XDG_SESSION_CLASS="user"
+< declare -x XDG_SESSION_DESKTOP="pop"
+< declare -x XDG_SESSION_TYPE="x11"
+< declare -x XMODIFIERS="@im=ibus"
+< declare -x _="/usr/bin/bash"
+COMMAND
+ export nosuch
+ export | grep nosuch | sort
+ RESULT
+1d0
+< declare -x nosuch
+COMMAND
+ export nosuch=fuga
+ export | grep nosuch | sort
+ RESULT
+1d0
+< declare -x nosuch="fuga"
+COMMAND
+ export nosuch=fuga hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch="fuga"
+COMMAND
+ export [invalid] nosuch hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch [invalid] hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch hoge=nosuch [invalid]
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch="nosuch2=hoge"
+export $nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x nosuch2="hoge"
+< declare -x nosuch="nosuch2=hoge"
+COMMAND
+ unset fuga 
+ export | echo $fuga
+ RESULT
+1d0
+< 
+COMMAND
+ unset [invalid] fuga 
+ echo $fuga
+ RESULT
+1d0
+< 
+COMMAND
+ env
+ RESULT
+1,47d0
+< SHELL=/usr/bin/bash
+< SESSION_MANAGER=local/pop-os:@/tmp/.ICE-unix/2373,unix/pop-os:/tmp/.ICE-unix/2373
+< QT_ACCESSIBILITY=1
+< COLORTERM=truecolor
+< XDG_CONFIG_DIRS=/etc/xdg/xdg-pop:/etc/xdg
+< SSH_AGENT_LAUNCHER=gnome-keyring
+< XDG_MENU_PREFIX=gnome-
+< GNOME_DESKTOP_SESSION_ID=this-is-deprecated
+< GTK_IM_MODULE=ibus
+< MANDATORY_PATH=/usr/share/gconf/pop.mandatory.path
+< GNOME_SHELL_SESSION_MODE=pop
+< SSH_AUTH_SOCK=/run/user/1000/keyring/ssh
+< XMODIFIERS=@im=ibus
+< DESKTOP_SESSION=pop
+< GTK_MODULES=gail:atk-bridge:appmenu-gtk-module
+< PWD=/home/masahitoarai/Documents/42_minishell
+< LOGNAME=masahitoarai
+< XDG_SESSION_DESKTOP=pop
+< XDG_SESSION_TYPE=x11
+< GPG_AGENT_INFO=/run/user/1000/gnupg/S.gpg-agent:0:1
+< SYSTEMD_EXEC_PID=17067
+< _=/usr/bin/env
+< XAUTHORITY=/run/user/1000/gdm/Xauthority
+< WINDOWPATH=2
+< USERNAME=masahitoarai
+< LANG=en_US.UTF-8
+< LS_COLORS=rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:
+< XDG_CURRENT_DESKTOP=pop:GNOME
+< VTE_VERSION=6800
+< GNOME_TERMINAL_SCREEN=/org/gnome/Terminal/screen/4c38b80c_03d8_473a_8472_cd41efb5b2de
+< LESSCLOSE=/usr/bin/lesspipe %s %s
+< XDG_SESSION_CLASS=user
+< TERM=xterm
+< DEFAULTS_PATH=/usr/share/gconf/pop.default.path
+< EOF=eof
+< LESSOPEN=| /usr/bin/lesspipe %s
+< USER=masahitoarai
+< GNOME_TERMINAL_SERVICE=:1.407
+< DISPLAY=:1
+< SHLVL=2
+< QT_IM_MODULE=ibus
+< fuga=fuga
+< XDG_RUNTIME_DIR=/run/user/1000
+< XDG_DATA_DIRS=/usr/share/pop:/usr/share/gnome:/home/masahitoarai/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
+< PATH=/home/masahitoarai/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/masahitoarai/.local/bin
+< GDMSESSION=pop
+< DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
+COMMAND
+ cd 
+ echo $PWD
+ RESULT
+1d0
+< /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd 
+ echo $PWD
+ RESULT
+1d0
+< /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd .
+ echo $PWD
+ RESULT
+1d0
+< /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd ..
+ echo $PWD
+ RESULT
+1d0
+< /home/masahitoarai/Documents
+COMMAND
+ cd ///
+ echo $PWD
+ RESULT
+1d0
+< /
+COMMAND
+ cd /tmp
+ echo $PWD
+ RESULT
+1d0
+< /tmp
+COMMAND
+ cd /tmp/
+ echo $PWD
+ RESULT
+1d0
+< /tmp
+COMMAND
+ cd /tmp///
+ echo $PWD
+ RESULT
+1d0
+< /tmp
+COMMAND
+ cd /../../../././.././
+ echo $PWD
+ RESULT
+1d0
+< /
+COMMAND
+ cd src
+ echo $PWD
+ RESULT
+1d0
+< /home/masahitoarai/Documents/42_minishell
+COMMAND
+ unset HOME
+cd 
+ echo $PWD
+ RESULT
+1d0
+< /home/masahitoarai/Documents/42_minishell
+COMMAND
+ echo
+ RESULT
+1d0
+< 
+COMMAND
+ echo hello
+ RESULT
+1d0
+< hello
+COMMAND
+ echo hello "    " world
+ RESULT
+1d0
+< hello      world
+COMMAND
+ echo -n hello
+ RESULT
+1d0
+< hello
+\ No newline at end of file
+COMMAND
+ echo -n hello world
+ RESULT
+1d0
+< hello world
+\ No newline at end of file
+COMMAND
+ echo hello -n
+ RESULT
+1d0
+< hello -n
+COMMAND
+ pwd
+ RESULT
+1d0
+< /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd
+pwd
+ RESULT
+1d0
+< /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd src
+pwd
+ RESULT
+1d0
+< /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd /etc
+pwd
+ RESULT
+1d0
+< /etc
+COMMAND
+ cd . 
+ pwd 
+ echo $PWD $OLDPWD
+ RESULT
+1,2d0
+< /home/masahitoarai/Documents/42_minishell
+< /home/masahitoarai/Documents/42_minishell /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd .. 
+ pwd 
+ echo $PWD $OLDPWD
+ RESULT
+1,2d0
+< /home/masahitoarai/Documents
+< /home/masahitoarai/Documents /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd /// 
+ pwd 
+ echo $PWD $OLDPWD
+ RESULT
+1,2d0
+< /
+< / /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd /tmp/// 
+ pwd 
+ echo $PWD $OLDPWD
+ RESULT
+1,2d0
+< /tmp
+< /tmp /home/masahitoarai/Documents/42_minishell
+COMMAND
+ unset PWD
+pwd
+cd /etc
+pwd
+ RESULT
+1,2d0
+< /home/masahitoarai/Documents/42_minishell
+< /etc
+COMMAND
+ unset PWD 
+ cd 
+ echo $PWD 
+cd /tmp
+echo $PWD
+ RESULT
+1,2d0
+< 
+< /tmp
+COMMAND
+ unset PWD
+cd
+echo $OLDPWD
+cd /tmp
+echo $OLDPWD
+ RESULT
+1,2d0
+< 
+< 
+COMMAND
+ unset PWD
+cd
+export|grep PWD
+cd /tmp
+export|grep PWD
+ RESULT
+1,2d0
+< declare -x OLDPWD
+< declare -x OLDPWD
+COMMAND
+ cat <<EOF
+hello
+world
+ RESULT
+0a1
+> 
+COMMAND
+ cat Makefile | grep minishell
+ RESULT
+1,18d0
+< NAME 		=	minishell
+< 	./minishell
+< 	valgrind --leak-check=full --show-leak-kinds=all -s -q ./minishell
+< 	valgrind --log-file="log/log.txt" --leak-check=full --show-leak-kinds=all -s -q ./minishell
+< # 	make -C minishell-tester
+< # 	./minishell
+< # 	make test -C minishell-tester
+< # 	make fclean -C minishell-tester
+< # 	make echo -C minishell-tester
+< # 	make exit -C minishell-tester
+< # 	make path -C minishell-tester
+< # 	make redirect -C minishell-tester
+< # 	make syntax_error -C minishell-tester
+< # 	make env -C minishell-tester
+< # 	make exp -C minishell-tester
+< # 	make pwd -C minishell-tester
+< # 	make simple -C minishell-tester
+< # 	make unset -C minishell-tester
+COMMAND
+ cat | cat | ls
+
+
+ RESULT
+1,18d0
+< a.out
+< cmp
+< exit42
+< include
+< leak.sh
+< libmshell
+< Makefile
+< minishell
+< no_exec_perm
+< no_read_perm
+< obj
+< out
+< print_args
+< print.c
+< result
+< srcs
+< test2.sh
+< test.sh
+COMMAND
+ ./infinite_loop
+ RESULT
+0a1
+> 
+COMMAND
+ ./infinite_loop
+ RESULT
+0a1
+> 
+COMMAND
+ export
+ RESULT
+28c28
+< declare -x SHLVL="2"
+---
+> declare -x SHLVL="1"
+47c47
+< declare -x _="/usr/bin/bash"
+---
+> declare -x _="./minishell"
+COMMAND
+ export nosuch
+ export | grep nosuch | sort
+ RESULT
+1d0
+< declare -x nosuch
+COMMAND
+ export nosuch=fuga
+ export | grep nosuch | sort
+ RESULT
+1d0
+< declare -x nosuch="fuga"
+COMMAND
+ export nosuch=fuga hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch="fuga"
+COMMAND
+ export [invalid] nosuch hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch [invalid] hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch hoge=nosuch [invalid]
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch="nosuch2=hoge"
+export $nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x nosuch2="hoge"
+< declare -x nosuch="nosuch2=hoge"
+COMMAND
+ unset fuga 
+ export | echo $fuga
+ RESULT
+1d0
+< 
+COMMAND
+ env
+ RESULT
+17d16
+< LOGNAME=masahitoarai
+18a18
+> LOGNAME=masahitoarai
+22d21
+< _=/usr/bin/env
+40c39
+< SHLVL=2
+---
+> SHLVL=1
+47a47
+> _=./minishell
+COMMAND
+ cd ..
+ echo $PWD
+ RESULT
+1c1
+< /home/masahitoarai/Documents
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd ///
+ echo $PWD
+ RESULT
+1c1
+< /
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd /tmp
+ echo $PWD
+ RESULT
+1c1
+< /tmp
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd /tmp/
+ echo $PWD
+ RESULT
+1c1
+< /tmp
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd /tmp///
+ echo $PWD
+ RESULT
+1c1
+< /tmp
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd /../../../././.././
+ echo $PWD
+ RESULT
+1c1
+< /
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd /etc
+pwd
+ RESULT
+1c1
+< /etc
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd . 
+ pwd 
+ echo $PWD $OLDPWD
+ RESULT
+2d1
+< /home/masahitoarai/Documents/42_minishell /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd .. 
+ pwd 
+ echo $PWD $OLDPWD
+ RESULT
+1,2c1
+< /home/masahitoarai/Documents
+< /home/masahitoarai/Documents /home/masahitoarai/Documents/42_minishell
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd /// 
+ pwd 
+ echo $PWD $OLDPWD
+ RESULT
+1,2c1
+< /
+< / /home/masahitoarai/Documents/42_minishell
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd /tmp/// 
+ pwd 
+ echo $PWD $OLDPWD
+ RESULT
+1,2c1
+< /tmp
+< /tmp /home/masahitoarai/Documents/42_minishell
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ unset PWD
+pwd
+cd /etc
+pwd
+ RESULT
+2c2
+< /etc
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ unset PWD 
+ cd 
+ echo $PWD 
+cd /tmp
+echo $PWD
+ RESULT
+2c2
+< /tmp
+---
+> 
+COMMAND
+ unset PWD
+cd
+echo $OLDPWD
+cd /tmp
+echo $OLDPWD
+ RESULT
+1,2d0
+< 
+< 
+COMMAND
+ unset PWD
+cd
+export|grep PWD
+cd /tmp
+export|grep PWD
+ RESULT
+1,2d0
+< declare -x OLDPWD
+< declare -x OLDPWD
+COMMAND
+ cat <<EOF
+hello
+world
+ RESULT
+0a1
+> 
+COMMAND
+ cat Makefile | grep minishell
+ RESULT
+1,18d0
+< NAME 		=	minishell
+< 	./minishell
+< 	valgrind --leak-check=full --show-leak-kinds=all -s -q ./minishell
+< 	valgrind --log-file="log/log.txt" --leak-check=full --show-leak-kinds=all -s -q ./minishell
+< # 	make -C minishell-tester
+< # 	./minishell
+< # 	make test -C minishell-tester
+< # 	make fclean -C minishell-tester
+< # 	make echo -C minishell-tester
+< # 	make exit -C minishell-tester
+< # 	make path -C minishell-tester
+< # 	make redirect -C minishell-tester
+< # 	make syntax_error -C minishell-tester
+< # 	make env -C minishell-tester
+< # 	make exp -C minishell-tester
+< # 	make pwd -C minishell-tester
+< # 	make simple -C minishell-tester
+< # 	make unset -C minishell-tester
+COMMAND
+ cat | cat | ls
+
+
+ RESULT
+1,18d0
+< a.out
+< cmp
+< exit42
+< include
+< leak.sh
+< libmshell
+< Makefile
+< minishell
+< no_exec_perm
+< no_read_perm
+< obj
+< out
+< print_args
+< print.c
+< result
+< srcs
+< test2.sh
+< test.sh
+COMMAND
+ ./infinite_loop
+ RESULT
+0a1
+> 
+COMMAND
+ ./infinite_loop
+ RESULT
+0a1
+> 
+COMMAND
+ export
+ RESULT
+28c28
+< declare -x SHLVL="2"
+---
+> declare -x SHLVL="1"
+47c47
+< declare -x _="/usr/bin/bash"
+---
+> declare -x _="./minishell"
+COMMAND
+ export nosuch
+ export | grep nosuch | sort
+ RESULT
+1d0
+< declare -x nosuch
+COMMAND
+ export nosuch=fuga
+ export | grep nosuch | sort
+ RESULT
+1d0
+< declare -x nosuch="fuga"
+COMMAND
+ export nosuch=fuga hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch="fuga"
+COMMAND
+ export [invalid] nosuch hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch [invalid] hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch hoge=nosuch [invalid]
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch="nosuch2=hoge"
+export $nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x nosuch2="hoge"
+< declare -x nosuch="nosuch2=hoge"
+COMMAND
+ unset fuga 
+ export | echo $fuga
+ RESULT
+1d0
+< 
+COMMAND
+ env
+ RESULT
+17d16
+< LOGNAME=masahitoarai
+18a18
+> LOGNAME=masahitoarai
+22d21
+< _=/usr/bin/env
+40c39
+< SHLVL=2
+---
+> SHLVL=1
+47a47
+> _=./minishell
+COMMAND
+ cd ..
+ echo $PWD
+ RESULT
+1c1
+< /home/masahitoarai/Documents
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd ///
+ echo $PWD
+ RESULT
+1c1
+< /
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd /tmp
+ echo $PWD
+ RESULT
+1c1
+< /tmp
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd /tmp/
+ echo $PWD
+ RESULT
+1c1
+< /tmp
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd /tmp///
+ echo $PWD
+ RESULT
+1c1
+< /tmp
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd /../../../././.././
+ echo $PWD
+ RESULT
+1c1
+< /
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd /etc
+pwd
+ RESULT
+1c1
+< /etc
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd . 
+ pwd 
+ echo $PWD $OLDPWD
+ RESULT
+2d1
+< /home/masahitoarai/Documents/42_minishell /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd .. 
+ pwd 
+ echo $PWD $OLDPWD
+ RESULT
+1,2c1
+< /home/masahitoarai/Documents
+< /home/masahitoarai/Documents /home/masahitoarai/Documents/42_minishell
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd /// 
+ pwd 
+ echo $PWD $OLDPWD
+ RESULT
+1,2c1
+< /
+< / /home/masahitoarai/Documents/42_minishell
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd /tmp/// 
+ pwd 
+ echo $PWD $OLDPWD
+ RESULT
+1,2c1
+< /tmp
+< /tmp /home/masahitoarai/Documents/42_minishell
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ unset PWD
+pwd
+cd /etc
+pwd
+ RESULT
+2c2
+< /etc
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ unset PWD 
+ cd 
+ echo $PWD 
+cd /tmp
+echo $PWD
+ RESULT
+2c2
+< /tmp
+---
+> 
+COMMAND
+ unset PWD
+cd
+echo $OLDPWD
+cd /tmp
+echo $OLDPWD
+ RESULT
+1,2d0
+< 
+< 
+COMMAND
+ unset PWD
+cd
+export|grep PWD
+cd /tmp
+export|grep PWD
+ RESULT
+1,2d0
+< declare -x OLDPWD
+< declare -x OLDPWD
+COMMAND
+ cat <<EOF
+hello
+world
+ RESULT
+0a1
+> 
+COMMAND
+ cat Makefile | grep minishell
+ RESULT
+1,18d0
+< NAME 		=	minishell
+< 	./minishell
+< 	valgrind --leak-check=full --show-leak-kinds=all -s -q ./minishell
+< 	valgrind --log-file="log/log.txt" --leak-check=full --show-leak-kinds=all -s -q ./minishell
+< # 	make -C minishell-tester
+< # 	./minishell
+< # 	make test -C minishell-tester
+< # 	make fclean -C minishell-tester
+< # 	make echo -C minishell-tester
+< # 	make exit -C minishell-tester
+< # 	make path -C minishell-tester
+< # 	make redirect -C minishell-tester
+< # 	make syntax_error -C minishell-tester
+< # 	make env -C minishell-tester
+< # 	make exp -C minishell-tester
+< # 	make pwd -C minishell-tester
+< # 	make simple -C minishell-tester
+< # 	make unset -C minishell-tester
+COMMAND
+ cat | cat | ls
+
+
+ RESULT
+1,18d0
+< a.out
+< cmp
+< exit42
+< include
+< leak.sh
+< libmshell
+< Makefile
+< minishell
+< no_exec_perm
+< no_read_perm
+< obj
+< out
+< print_args
+< print.c
+< result
+< srcs
+< test2.sh
+< test.sh
+COMMAND
+ ./infinite_loop
+ RESULT
+0a1
+> Quit(core dumped)
+COMMAND
+ ./infinite_loop
+ RESULT
+0a1
+> 
+COMMAND
+ ./infinite_loop
+ RESULT
+0a1
+> 
+COMMAND
+ export
+ RESULT
+28c28
+< declare -x SHLVL="2"
+---
+> declare -x SHLVL="1"
+47c47
+< declare -x _="/usr/bin/bash"
+---
+> declare -x _="./minishell"
+COMMAND
+ export nosuch
+ export | grep nosuch | sort
+ RESULT
+1d0
+< declare -x nosuch
+COMMAND
+ export nosuch=fuga
+ export | grep nosuch | sort
+ RESULT
+1d0
+< declare -x nosuch="fuga"
+COMMAND
+ export nosuch=fuga hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch="fuga"
+COMMAND
+ export [invalid] nosuch hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch [invalid] hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch hoge=nosuch [invalid]
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch="nosuch2=hoge"
+export $nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x nosuch2="hoge"
+< declare -x nosuch="nosuch2=hoge"
+COMMAND
+ unset fuga 
+ export | echo $fuga
+ RESULT
+1d0
+< 
+COMMAND
+ env
+ RESULT
+17d16
+< LOGNAME=masahitoarai
+18a18
+> LOGNAME=masahitoarai
+22d21
+< _=/usr/bin/env
+40c39
+< SHLVL=2
+---
+> SHLVL=1
+47a47
+> _=./minishell
+COMMAND
+ cd ..
+ echo $PWD
+ RESULT
+1c1
+< /home/masahitoarai/Documents
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd ///
+ echo $PWD
+ RESULT
+1c1
+< /
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd /tmp
+ echo $PWD
+ RESULT
+1c1
+< /tmp
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd /tmp/
+ echo $PWD
+ RESULT
+1c1
+< /tmp
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd /tmp///
+ echo $PWD
+ RESULT
+1c1
+< /tmp
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd /../../../././.././
+ echo $PWD
+ RESULT
+1c1
+< /
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd /etc
+pwd
+ RESULT
+1c1
+< /etc
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd . 
+ pwd 
+ echo $PWD $OLDPWD
+ RESULT
+2d1
+< /home/masahitoarai/Documents/42_minishell /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd .. 
+ pwd 
+ echo $PWD $OLDPWD
+ RESULT
+1,2c1
+< /home/masahitoarai/Documents
+< /home/masahitoarai/Documents /home/masahitoarai/Documents/42_minishell
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd /// 
+ pwd 
+ echo $PWD $OLDPWD
+ RESULT
+1,2c1
+< /
+< / /home/masahitoarai/Documents/42_minishell
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd /tmp/// 
+ pwd 
+ echo $PWD $OLDPWD
+ RESULT
+1,2c1
+< /tmp
+< /tmp /home/masahitoarai/Documents/42_minishell
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ unset PWD
+pwd
+cd /etc
+pwd
+ RESULT
+2c2
+< /etc
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ unset PWD 
+ cd 
+ echo $PWD 
+cd /tmp
+echo $PWD
+ RESULT
+2c2
+< /tmp
+---
+> 
+COMMAND
+ unset PWD
+cd
+echo $OLDPWD
+cd /tmp
+echo $OLDPWD
+ RESULT
+1,2d0
+< 
+< 
+COMMAND
+ unset PWD
+cd
+export|grep PWD
+cd /tmp
+export|grep PWD
+ RESULT
+1,2d0
+< declare -x OLDPWD
+< declare -x OLDPWD
+COMMAND
+ cat <<EOF
+hello
+world
+ RESULT
+0a1
+> 
+COMMAND
+ cat Makefile | grep minishell
+ RESULT
+1,18d0
+< NAME 		=	minishell
+< 	./minishell
+< 	valgrind --leak-check=full --show-leak-kinds=all -s -q ./minishell
+< 	valgrind --log-file="log/log.txt" --leak-check=full --show-leak-kinds=all -s -q ./minishell
+< # 	make -C minishell-tester
+< # 	./minishell
+< # 	make test -C minishell-tester
+< # 	make fclean -C minishell-tester
+< # 	make echo -C minishell-tester
+< # 	make exit -C minishell-tester
+< # 	make path -C minishell-tester
+< # 	make redirect -C minishell-tester
+< # 	make syntax_error -C minishell-tester
+< # 	make env -C minishell-tester
+< # 	make exp -C minishell-tester
+< # 	make pwd -C minishell-tester
+< # 	make simple -C minishell-tester
+< # 	make unset -C minishell-tester
+COMMAND
+ cat | cat | ls
+
+
+ RESULT
+1,18d0
+< a.out
+< cmp
+< exit42
+< include
+< leak.sh
+< libmshell
+< Makefile
+< minishell
+< no_exec_perm
+< no_read_perm
+< obj
+< out
+< print_args
+< print.c
+< result
+< srcs
+< test2.sh
+< test.sh
+COMMAND
+ ./infinite_loop
+ RESULT
+0a1
+> Quit(core dumped)
+COMMAND
+ ./infinite_loop
+ RESULT
+0a1
+> 
+COMMAND
+ ./infinite_loop
+ RESULT
+0a1
+> 
+COMMAND
+ export
+ RESULT
+25c25
+< declare -x OLDPWD="/home/masahitoarai/Documents/42/42_philosophers/philo_real"
+---
+> declare -x OLDPWD
+33c33
+< declare -x SHLVL="3"
+---
+> declare -x SHLVL="2"
+58c58
+< declare -x _="/usr/bin/bash"
+---
+> declare -x _="./minishell"
+COMMAND
+ export nosuch
+ export | grep nosuch | sort
+ RESULT
+1d0
+< declare -x nosuch
+COMMAND
+ export nosuch=fuga
+ export | grep nosuch | sort
+ RESULT
+1d0
+< declare -x nosuch="fuga"
+COMMAND
+ export nosuch=fuga hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch="fuga"
+COMMAND
+ export [invalid] nosuch hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch [invalid] hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch hoge=nosuch [invalid]
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch="nosuch2=hoge"
+export $nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x nosuch2="hoge"
+< declare -x nosuch="nosuch2=hoge"
+COMMAND
+ unset fuga 
+ export | echo $fuga
+ RESULT
+1d0
+< 
+COMMAND
+ env
+ RESULT
+18d17
+< XDG_SESSION_DESKTOP=pop
+19a19
+> XDG_SESSION_DESKTOP=pop
+23d22
+< _=/usr/bin/env
+47c46
+< SHLVL=3
+---
+> SHLVL=2
+58d56
+< OLDPWD=/home/masahitoarai/Documents/42/42_philosophers/philo_real
+59a58
+> _=./minishell
+COMMAND
+ unset PWD 
+ cd 
+ echo $PWD 
+cd /tmp
+echo $PWD
+ RESULT
+1,2c1,2
+< /home/masahitoarai
+< /tmp
+---
+> 
+> 
+COMMAND
+ unset PWD
+cd
+echo $OLDPWD
+cd /tmp
+echo $OLDPWD
+ RESULT
+1c1
+< 
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ unset PWD
+cd
+export|grep PWD
+cd /tmp
+export|grep PWD
+ RESULT
+1,2d0
+< declare -x OLDPWD
+< declare -x OLDPWD="/home/masahitoarai"
+COMMAND
+ unset PWD
+cd
+env|grep PWD
+cd /tmp
+env|grep PWD
+ RESULT
+1d0
+< OLDPWD=/home/masahitoarai
