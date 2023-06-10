@@ -172,6 +172,7 @@ ssize_t		find_env_len(char *str, t_env *env);
 ssize_t		calc_expand_len(char *line, t_env *env, ssize_t len);
 ssize_t		vari_expand_len(char *line, t_env *env);
 char		*find_env(char *str, t_env *env);
+t_env *make_env(char *key, char *value);
 
 t_token	*token_last(t_token *token);
 bool is_file_access(char *str);

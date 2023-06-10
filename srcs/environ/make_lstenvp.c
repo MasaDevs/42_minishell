@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   make_lstenvp.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keys <keys@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: masahitoarai <masahitoarai@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/14 09:09:09 by keys              #+#    #+#             */
-/*   Updated: 2023/03/12 00:54:58 by keys             ###   ########.fr       */
+/*   Updated: 2023/06/11 02:13:20 by masahitoara      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,16 @@ void	make_lstenv(t_env **s_env, char **envp)
 			ft_env_addback(s_env, new);
 		i++;
 	}
+}
+
+t_env *make_env(char *key, char *value)
+{
+	t_env *new;
+
+	new = malloc(sizeof(t_env));
+	if(!new)
+		_err("malloc err\n");
+	new->key = ft_strdup(key);
+	new->value = ft_strdup(value);
+	return (new);
 }
