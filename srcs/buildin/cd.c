@@ -6,13 +6,14 @@
 /*   By: masahitoarai <masahitoarai@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/15 12:59:56 by keys              #+#    #+#             */
-/*   Updated: 2023/06/11 02:17:11 by masahitoara      ###   ########.fr       */
+/*   Updated: 2023/06/11 03:32:51masahitoara      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 #define PATH_MAXLEN 4096
+void imple_pwd(t_env *head, t_status *s);
 
 char	*get_home_dir(t_env *env)
 {
@@ -85,8 +86,31 @@ int	cd(char *argv[], t_env *env, t_status *s)
 	if (status < 0)
 		dprintf(STDERR_FILENO, "bash: cd: too many arguments\n");
 	else
-	{
-		ft_env_addback(&env, make_env("OLDPWD", ));
-	}
+		imple_pwd(env, s);
 	return (0);
+}
+
+void imple_pwd(t_env *head, t_status *s)
+{
+	t_env	*env;
+	t_env	*new;
+	char	*path;
+
+	env = head;
+	while(env)
+	{
+		if(!strcmp(env->key, "PWD"))
+		{
+			new = make_env("OLDPWD", env->value);
+			if(!new)
+				_err("malloc error\n");
+			ft_env_addback(&head, new);
+		}
+		env = env->next;
+	}
+	path = get_pwd(s);
+	new = make_env("PWD", path);
+	if(!new)
+		_err("malloc error\n");
+	ft_env_addback(&head, new);
 }

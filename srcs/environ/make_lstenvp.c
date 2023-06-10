@@ -6,7 +6,7 @@
 /*   By: masahitoarai <masahitoarai@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/14 09:09:09 by keys              #+#    #+#             */
-/*   Updated: 2023/06/11 02:13:20 by masahitoara      ###   ########.fr       */
+/*   Updated: 2023/06/11 02:44:14 by masahitoara      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,3 +66,4 @@ t_env *make_env(char *key, char *value)
 	new->value = ft_strdup(value);
 	return (new);
 }
+

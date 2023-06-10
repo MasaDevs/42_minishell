@@ -176,4 +176,5 @@ t_env *make_env(char *key, char *value);
 
 t_token	*token_last(t_token *token);
 bool is_file_access(char *str);
+char	*get_pwd(t_status *s);
 #endif
