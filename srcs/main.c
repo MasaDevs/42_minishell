@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: masahitoarai <masahitoarai@student.42.f    +#+  +:+       +#+        */
+/*   By: ubuntu2204 <ubuntu2204@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 13:54:10 by keys              #+#    #+#             */
-/*   Updated: 2023/06/07 20:15:34 by masahitoara      ###   ########.fr       */
+/*   Updated: 2023/06/10 19:38:05 by ubuntu2204       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+t_global	g_global;
 
 void	print_env1(t_env *env)
 {
@@ -36,12 +37,6 @@ static void	func_readline(t_env *env, char *line, t_token *token, t_node *tree)
 	{
 		if (isatty(0))
 			rl_event_hook = check_state;
-		/*
-		if (!isatty(1))
-		{
-			write(STDERR_FILENO, ": write error: Bad file descriptor\n", 35);
-		}
-		*/
 		set_signal();
 		line = readline("minishell>");
 		if (line == NULL)

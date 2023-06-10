@@ -35,6 +35,7 @@ leak :
 clean:
 	$(RM) -r $(OBJDIR)
 	$(RM) .*.heredoc
+	$(RM) ./.heredoc/.*.heredoc
 
 fclean: clean
 	$(RM) $(NAME)
@@ -54,7 +55,11 @@ varl:
 
 
 
-
+test:
+	$(RM) -f a.out cpm exit42 infinite_loop out print_args result 
+	@make --no-print-directory
+	sleep 1;
+	bash test.sh
 
 # t:
 # 	make all

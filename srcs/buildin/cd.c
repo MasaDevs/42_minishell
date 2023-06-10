@@ -6,14 +6,13 @@
 /*   By: masahitoarai <masahitoarai@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/15 12:59:56 by keys              #+#    #+#             */
-/*   Updated: 2023/06/07 20:53:33 by masahitoara      ###   ########.fr       */
+/*   Updated: 2023/06/07 14:42:09 by masahitoara      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 #define PATH_MAXLEN 4096
-extern t_global	g_global;
 
 char	*get_home_dir(t_env *env)
 {
@@ -61,16 +60,6 @@ char	*make_abs_path(char *path, char *argv, char *home)
 	return (path);
 }
 
-static int num_of_argv(char *argv[])
-{
-	int i;
-
-	i = 0;
-	while (argv[i])
-		i++;
-	return (i);
-}
-
 int	cd(char *argv[], t_env *env, t_status *s)
 {
 	char	path[PATH_MAXLEN];
@@ -81,11 +70,6 @@ int	cd(char *argv[], t_env *env, t_status *s)
 	home = get_home_dir(env);
 	if (home == NULL)
 		_err("HOME not set\n");
-	else if(2 < num_of_argv(argv))
-	{
-		printf("cd: too many arguments\n");
-		return (0);
-	}
 	if (!argv[1])
 		status = chdir(home);
 	else if (argv[1][0] == '/')
@@ -99,9 +83,6 @@ int	cd(char *argv[], t_env *env, t_status *s)
 	}
 	free(home);
 	if (status < 0)
-	{
-		printf("cd: %s: No such file or directory\n", argv[1]);
-		g_global.exit_status = 1;
-	}
+		printf("bash: cd: too many arguments\n");
 	return (0);
 }
