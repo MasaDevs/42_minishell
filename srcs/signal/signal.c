@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keys <keys@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: masahitoarai <masahitoarai@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 15:44:10 by keys              #+#    #+#             */
-/*   Updated: 2023/03/25 18:41:29 by keys             ###   ########.fr       */
+/*   Updated: 2023/06/11 11:34:57 by masahitoara      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,12 @@ int	exec_action(void)
 {
 	if (g_global.sig == SIGINT)
 	{
-		printf("\n");
+		dprintf(STDERR_FILENO ,"\n");
 		g_global.exit_status = 130;
 	}
 	else if (g_global.sig == SIGQUIT)
 	{
-		printf("Quit(core dumped)\n");
+		dprintf(STDERR_FILENO, "(core dumped)\n");
 		g_global.exit_status = 131;
 	}
 	g_global.sig = 0;
