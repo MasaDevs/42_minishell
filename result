@@ -157,6 +157,1339 @@ echo $OLDPWD
 ---
 > /home/masahitoarai/Documents/42_minishell
 COMMAND
+unset PWD
+cd
+export|grep PWD
+cd /tmp
+export|grep PWD
+ RESULT
+1,2d0
+< declare -x OLDPWD
+< declare -x OLDPWD="/home/masahitoarai"
+COMMAND
+unset PWD
+cd
+env|grep PWD
+cd /tmp
+env|grep PWD
+ RESULT
+1d0
+< OLDPWD=/home/masahitoarai
+COMMAND
+ cat <<EOF
+hello
+world
+ RESULT
+0a1
+> 
+COMMAND
+ cat Makefile | grep minishell
+ RESULT
+1,18d0
+< NAME 		=	minishell
+< 	./minishell
+< 	valgrind --leak-check=full --show-leak-kinds=all -s -q ./minishell
+< 	valgrind --log-file="log/log.txt" --leak-check=full --show-leak-kinds=all -s -q ./minishell
+< # 	make -C minishell-tester
+< # 	./minishell
+< # 	make test -C minishell-tester
+< # 	make fclean -C minishell-tester
+< # 	make echo -C minishell-tester
+< # 	make exit -C minishell-tester
+< # 	make path -C minishell-tester
+< # 	make redirect -C minishell-tester
+< # 	make syntax_error -C minishell-tester
+< # 	make env -C minishell-tester
+< # 	make exp -C minishell-tester
+< # 	make pwd -C minishell-tester
+< # 	make simple -C minishell-tester
+< # 	make unset -C minishell-tester
+COMMAND
+ cat | cat | ls
+
+
+ RESULT
+1,19d0
+< a.out
+< cmp
+< exit42
+< include
+< inf.c
+< leak.sh
+< libmshell
+< Makefile
+< minishell
+< no_exec_perm
+< no_read_perm
+< obj
+< out
+< print_args
+< print.c
+< result
+< srcs
+< test2.sh
+< test.sh
+COMMAND
+ export
+ RESULT
+22c22
+< declare -x OLDPWD="/home/masahitoarai"
+---
+> declare -x OLDPWD
+29c29
+< declare -x SHLVL="2"
+---
+> declare -x SHLVL="1"
+48c48
+< declare -x _="/usr/bin/bash"
+---
+> declare -x _="./minishell"
+COMMAND
+ export nosuch
+ export | grep nosuch | sort
+ RESULT
+1d0
+< declare -x nosuch
+COMMAND
+ export nosuch=fuga
+ export | grep nosuch | sort
+ RESULT
+1d0
+< declare -x nosuch="fuga"
+COMMAND
+ export nosuch=fuga hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch="fuga"
+COMMAND
+ export [invalid] nosuch hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch [invalid] hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch hoge=nosuch [invalid]
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch="nosuch2=hoge"
+export $nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x nosuch2="hoge"
+< declare -x nosuch="nosuch2=hoge"
+COMMAND
+ unset fuga 
+ export | echo $fuga
+ RESULT
+1d0
+< 
+COMMAND
+ env
+ RESULT
+17d16
+< LOGNAME=masahitoarai
+18a18
+> LOGNAME=masahitoarai
+22d21
+< _=/usr/bin/env
+41c40
+< SHLVL=2
+---
+> SHLVL=1
+49c48
+< OLDPWD=/home/masahitoarai
+---
+> _=./minishell
+COMMAND
+ cd 
+ echo $PWD
+ RESULT
+1d0
+< /home/masahitoarai
+COMMAND
+ cd 
+ echo $PWD
+ RESULT
+1d0
+< /home/masahitoarai
+COMMAND
+ cd /tmp
+ echo $PWD
+ RESULT
+1c1
+< /tmp
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd /tmp/
+ echo $PWD
+ RESULT
+1c1
+< /tmp
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd /tmp///
+ echo $PWD
+ RESULT
+1c1
+< /tmp
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ unset HOME
+cd 
+ echo $PWD
+ RESULT
+1d0
+< /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd
+pwd
+ RESULT
+1d0
+< /home/masahitoarai
+COMMAND
+ cd .. 
+ pwd 
+ echo $PWD $OLDPWD
+ RESULT
+2c2
+< /home/masahitoarai/Documents /home/masahitoarai/Documents/42_minishell
+---
+> /home/masahitoarai/Documents /home/masahitoarai/Documents
+COMMAND
+ cd /// 
+ pwd 
+ echo $PWD $OLDPWD
+ RESULT
+2c2
+< / /home/masahitoarai/Documents/42_minishell
+---
+> / /
+COMMAND
+ cd /tmp/// 
+ pwd 
+ echo $PWD $OLDPWD
+ RESULT
+2d1
+< /tmp /home/masahitoarai/Documents/42_minishell
+COMMAND
+ unset PWD 
+ cd 
+ echo $PWD 
+cd /tmp
+echo $PWD
+ RESULT
+1,2d0
+< /home/masahitoarai
+< /tmp
+COMMAND
+ unset PWD
+cd
+echo $OLDPWD
+cd /tmp
+echo $OLDPWD
+ RESULT
+1,2d0
+< 
+< /home/masahitoarai
+COMMAND
+ unset PWD
+cd
+export|grep PWD
+cd /tmp
+export|grep PWD
+ RESULT
+1,2d0
+< declare -x OLDPWD
+< declare -x OLDPWD="/home/masahitoarai"
+COMMAND
+ unset PWD
+cd
+env|grep PWD
+cd /tmp
+env|grep PWD
+ RESULT
+1d0
+< OLDPWD=/home/masahitoarai
+COMMAND
+ cat <<EOF
+hello
+world
+ RESULT
+0a1
+> 
+COMMAND
+ cat Makefile | grep minishell
+ RESULT
+1,18d0
+< NAME 		=	minishell
+< 	./minishell
+< 	valgrind --leak-check=full --show-leak-kinds=all -s -q ./minishell
+< 	valgrind --log-file="log/log.txt" --leak-check=full --show-leak-kinds=all -s -q ./minishell
+< # 	make -C minishell-tester
+< # 	./minishell
+< # 	make test -C minishell-tester
+< # 	make fclean -C minishell-tester
+< # 	make echo -C minishell-tester
+< # 	make exit -C minishell-tester
+< # 	make path -C minishell-tester
+< # 	make redirect -C minishell-tester
+< # 	make syntax_error -C minishell-tester
+< # 	make env -C minishell-tester
+< # 	make exp -C minishell-tester
+< # 	make pwd -C minishell-tester
+< # 	make simple -C minishell-tester
+< # 	make unset -C minishell-tester
+COMMAND
+ cat | cat | ls
+
+
+ RESULT
+1,19d0
+< a.out
+< cmp
+< exit42
+< include
+< inf.c
+< leak.sh
+< libmshell
+< Makefile
+< minishell
+< no_exec_perm
+< no_read_perm
+< obj
+< out
+< print_args
+< print.c
+< result
+< srcs
+< test2.sh
+< test.sh
+COMMAND
+ export
+ RESULT
+26c26
+< declare -x OLDPWD="/home/masahitoarai"
+---
+> declare -x OLDPWD
+34c34
+< declare -x SHLVL="3"
+---
+> declare -x SHLVL="2"
+59c59
+< declare -x _="/usr/bin/bash"
+---
+> declare -x _="./minishell"
+COMMAND
+ export nosuch
+ export | grep nosuch | sort
+ RESULT
+1d0
+< declare -x nosuch
+COMMAND
+ export nosuch=fuga
+ export | grep nosuch | sort
+ RESULT
+1d0
+< declare -x nosuch="fuga"
+COMMAND
+ export nosuch=fuga hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch="fuga"
+COMMAND
+ export [invalid] nosuch hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch [invalid] hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch hoge=nosuch [invalid]
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch="nosuch2=hoge"
+export $nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x nosuch2="hoge"
+< declare -x nosuch="nosuch2=hoge"
+COMMAND
+ unset fuga 
+ export | echo $fuga
+ RESULT
+1d0
+< 
+COMMAND
+ env
+ RESULT
+19d18
+< XDG_SESSION_DESKTOP=pop
+20a20
+> XDG_SESSION_DESKTOP=pop
+24d23
+< _=/usr/bin/env
+48c47
+< SHLVL=3
+---
+> SHLVL=2
+59d57
+< OLDPWD=/home/masahitoarai
+60a59
+> _=./minishell
+COMMAND
+ cd 
+ echo $PWD
+ RESULT
+1d0
+< /home/masahitoarai
+COMMAND
+ cd 
+ echo $PWD
+ RESULT
+1d0
+< /home/masahitoarai
+COMMAND
+ cd /tmp
+ echo $PWD
+ RESULT
+1c1
+< /tmp
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd /tmp/
+ echo $PWD
+ RESULT
+1c1
+< /tmp
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd /tmp///
+ echo $PWD
+ RESULT
+1c1
+< /tmp
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ unset HOME
+cd 
+ echo $PWD
+ RESULT
+1d0
+< /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd
+pwd
+ RESULT
+1d0
+< /home/masahitoarai
+COMMAND
+ cd .. 
+ pwd 
+ echo $PWD $OLDPWD
+ RESULT
+2c2
+< /home/masahitoarai/Documents /home/masahitoarai/Documents/42_minishell
+---
+> /home/masahitoarai/Documents /home/masahitoarai/Documents
+COMMAND
+ cd /// 
+ pwd 
+ echo $PWD $OLDPWD
+ RESULT
+2c2
+< / /home/masahitoarai/Documents/42_minishell
+---
+> / /
+COMMAND
+ cd /tmp/// 
+ pwd 
+ echo $PWD $OLDPWD
+ RESULT
+2d1
+< /tmp /home/masahitoarai/Documents/42_minishell
+COMMAND
+ unset PWD 
+ cd 
+ echo $PWD 
+cd /tmp
+echo $PWD
+ RESULT
+1,2d0
+< /home/masahitoarai
+< /tmp
+COMMAND
+ unset PWD
+cd
+echo $OLDPWD
+cd /tmp
+echo $OLDPWD
+ RESULT
+1,2d0
+< 
+< /home/masahitoarai
+COMMAND
+ unset PWD
+cd
+export|grep PWD
+cd /tmp
+export|grep PWD
+ RESULT
+1,2d0
+< declare -x OLDPWD
+< declare -x OLDPWD="/home/masahitoarai"
+COMMAND
+ unset PWD
+cd
+env|grep PWD
+cd /tmp
+env|grep PWD
+ RESULT
+1d0
+< OLDPWD=/home/masahitoarai
+COMMAND
+ cat <<EOF
+hello
+world
+ RESULT
+0a1
+> 
+COMMAND
+ cat Makefile | grep minishell
+ RESULT
+1,18d0
+< NAME 		=	minishell
+< 	./minishell
+< 	valgrind --leak-check=full --show-leak-kinds=all -s -q ./minishell
+< 	valgrind --log-file="log/log.txt" --leak-check=full --show-leak-kinds=all -s -q ./minishell
+< # 	make -C minishell-tester
+< # 	./minishell
+< # 	make test -C minishell-tester
+< # 	make fclean -C minishell-tester
+< # 	make echo -C minishell-tester
+< # 	make exit -C minishell-tester
+< # 	make path -C minishell-tester
+< # 	make redirect -C minishell-tester
+< # 	make syntax_error -C minishell-tester
+< # 	make env -C minishell-tester
+< # 	make exp -C minishell-tester
+< # 	make pwd -C minishell-tester
+< # 	make simple -C minishell-tester
+< # 	make unset -C minishell-tester
+COMMAND
+ cat | cat | ls
+
+
+ RESULT
+1,19d0
+< a.out
+< cmp
+< exit42
+< include
+< inf.c
+< leak.sh
+< libmshell
+< Makefile
+< minishell
+< no_exec_perm
+< no_read_perm
+< obj
+< out
+< print_args
+< print.c
+< result
+< srcs
+< test2.sh
+< test.sh
+COMMAND
+ export
+ RESULT
+26c26
+< declare -x OLDPWD="/home/masahitoarai"
+---
+> declare -x OLDPWD
+34c34
+< declare -x SHLVL="3"
+---
+> declare -x SHLVL="2"
+59c59
+< declare -x _="/usr/bin/bash"
+---
+> declare -x _="./minishell"
+COMMAND
+ export nosuch
+ export | grep nosuch | sort
+ RESULT
+1d0
+< declare -x nosuch
+COMMAND
+ export nosuch=fuga
+ export | grep nosuch | sort
+ RESULT
+1d0
+< declare -x nosuch="fuga"
+COMMAND
+ export nosuch=fuga hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch="fuga"
+COMMAND
+ export [invalid] nosuch hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch [invalid] hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch hoge=nosuch [invalid]
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch="nosuch2=hoge"
+export $nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x nosuch2="hoge"
+< declare -x nosuch="nosuch2=hoge"
+COMMAND
+ unset fuga 
+ export | echo $fuga
+ RESULT
+1d0
+< 
+COMMAND
+ env
+ RESULT
+19d18
+< XDG_SESSION_DESKTOP=pop
+20a20
+> XDG_SESSION_DESKTOP=pop
+24d23
+< _=/usr/bin/env
+48c47
+< SHLVL=3
+---
+> SHLVL=2
+59d57
+< OLDPWD=/home/masahitoarai
+60a59
+> _=./minishell
+COMMAND
+ cd /tmp
+ echo $PWD
+ RESULT
+1c1
+< /tmp
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd /tmp/
+ echo $PWD
+ RESULT
+1c1
+< /tmp
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd /tmp///
+ echo $PWD
+ RESULT
+1c1
+< /tmp
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd .. 
+ pwd 
+ echo $PWD $OLDPWD
+ RESULT
+2c2
+< /home/masahitoarai/Documents /home/masahitoarai/Documents/42_minishell
+---
+> /home/masahitoarai/Documents /home/masahitoarai/Documents
+COMMAND
+ cd /// 
+ pwd 
+ echo $PWD $OLDPWD
+ RESULT
+2c2
+< / /home/masahitoarai/Documents/42_minishell
+---
+> / /
+COMMAND
+ cd /tmp/// 
+ pwd 
+ echo $PWD $OLDPWD
+ RESULT
+2d1
+< /tmp /home/masahitoarai/Documents/42_minishell
+COMMAND
+ unset PWD 
+ cd 
+ echo $PWD 
+cd /tmp
+echo $PWD
+ RESULT
+1,2c1,2
+< /home/masahitoarai
+< /tmp
+---
+> 
+> 
+COMMAND
+ unset PWD
+cd
+echo $OLDPWD
+cd /tmp
+echo $OLDPWD
+ RESULT
+1c1
+< 
+---
+> /home/masahitoarai
+COMMAND
+ unset PWD
+cd
+export|grep PWD
+cd /tmp
+export|grep PWD
+ RESULT
+1,2d0
+< declare -x OLDPWD
+< declare -x OLDPWD="/home/masahitoarai"
+COMMAND
+ unset PWD
+cd
+env|grep PWD
+cd /tmp
+env|grep PWD
+ RESULT
+1d0
+< OLDPWD=/home/masahitoarai
+COMMAND
+ cat <<EOF
+hello
+world
+ RESULT
+0a1
+> 
+COMMAND
+ cat Makefile | grep minishell
+ RESULT
+1,18d0
+< NAME 		=	minishell
+< 	./minishell
+< 	valgrind --leak-check=full --show-leak-kinds=all -s -q ./minishell
+< 	valgrind --log-file="log/log.txt" --leak-check=full --show-leak-kinds=all -s -q ./minishell
+< # 	make -C minishell-tester
+< # 	./minishell
+< # 	make test -C minishell-tester
+< # 	make fclean -C minishell-tester
+< # 	make echo -C minishell-tester
+< # 	make exit -C minishell-tester
+< # 	make path -C minishell-tester
+< # 	make redirect -C minishell-tester
+< # 	make syntax_error -C minishell-tester
+< # 	make env -C minishell-tester
+< # 	make exp -C minishell-tester
+< # 	make pwd -C minishell-tester
+< # 	make simple -C minishell-tester
+< # 	make unset -C minishell-tester
+COMMAND
+ cat | cat | ls
+
+
+ RESULT
+1,19d0
+< a.out
+< cmp
+< exit42
+< include
+< inf.c
+< leak.sh
+< libmshell
+< Makefile
+< minishell
+< no_exec_perm
+< no_read_perm
+< obj
+< out
+< print_args
+< print.c
+< result
+< srcs
+< test2.sh
+< test.sh
+COMMAND
+ export
+ RESULT
+26c26
+< declare -x OLDPWD="/home/masahitoarai"
+---
+> declare -x OLDPWD
+34c34
+< declare -x SHLVL="3"
+---
+> declare -x SHLVL="2"
+59c59
+< declare -x _="/usr/bin/bash"
+---
+> declare -x _="./minishell"
+COMMAND
+ export nosuch
+ export | grep nosuch | sort
+ RESULT
+1d0
+< declare -x nosuch
+COMMAND
+ export nosuch=fuga
+ export | grep nosuch | sort
+ RESULT
+1d0
+< declare -x nosuch="fuga"
+COMMAND
+ export nosuch=fuga hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch="fuga"
+COMMAND
+ export [invalid] nosuch hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch [invalid] hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch hoge=nosuch [invalid]
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch="nosuch2=hoge"
+export $nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x nosuch2="hoge"
+< declare -x nosuch="nosuch2=hoge"
+COMMAND
+ unset fuga 
+ export | echo $fuga
+ RESULT
+1d0
+< 
+COMMAND
+ env
+ RESULT
+19d18
+< XDG_SESSION_DESKTOP=pop
+20a20
+> XDG_SESSION_DESKTOP=pop
+24d23
+< _=/usr/bin/env
+48c47
+< SHLVL=3
+---
+> SHLVL=2
+59d57
+< OLDPWD=/home/masahitoarai
+60a59
+> _=./minishell
+COMMAND
+ cd .. 
+ pwd 
+ echo $PWD $OLDPWD
+ RESULT
+2c2
+< /home/masahitoarai/Documents /home/masahitoarai/Documents/42_minishell
+---
+> /home/masahitoarai/Documents /home/masahitoarai/Documents
+COMMAND
+ cd /// 
+ pwd 
+ echo $PWD $OLDPWD
+ RESULT
+2d1
+< / /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd /tmp/// 
+ pwd 
+ echo $PWD $OLDPWD
+ RESULT
+2d1
+< /tmp /home/masahitoarai/Documents/42_minishell
+COMMAND
+ unset PWD 
+ cd 
+ echo $PWD 
+cd /tmp
+echo $PWD
+ RESULT
+1,2c1,2
+< /home/masahitoarai
+< /tmp
+---
+> 
+> 
+COMMAND
+ unset PWD
+cd
+echo $OLDPWD
+cd /tmp
+echo $OLDPWD
+ RESULT
+1d0
+< 
+2a2
+> echo $OLDPWD
+COMMAND
+ unset PWD
+cd
+export|grep PWD
+cd /tmp
+export|grep PWD
+ RESULT
+1,2d0
+< declare -x OLDPWD
+< declare -x OLDPWD="/home/masahitoarai"
+COMMAND
+ unset PWD
+cd
+env|grep PWD
+cd /tmp
+env|grep PWD
+ RESULT
+1d0
+< OLDPWD=/home/masahitoarai
+COMMAND
+ cat <<EOF
+hello
+world
+ RESULT
+0a1
+> 
+COMMAND
+ cat Makefile | grep minishell
+ RESULT
+1,18d0
+< NAME 		=	minishell
+< 	./minishell
+< 	valgrind --leak-check=full --show-leak-kinds=all -s -q ./minishell
+< 	valgrind --log-file="log/log.txt" --leak-check=full --show-leak-kinds=all -s -q ./minishell
+< # 	make -C minishell-tester
+< # 	./minishell
+< # 	make test -C minishell-tester
+< # 	make fclean -C minishell-tester
+< # 	make echo -C minishell-tester
+< # 	make exit -C minishell-tester
+< # 	make path -C minishell-tester
+< # 	make redirect -C minishell-tester
+< # 	make syntax_error -C minishell-tester
+< # 	make env -C minishell-tester
+< # 	make exp -C minishell-tester
+< # 	make pwd -C minishell-tester
+< # 	make simple -C minishell-tester
+< # 	make unset -C minishell-tester
+COMMAND
+ cat | cat | ls
+
+
+ RESULT
+1,19d0
+< a.out
+< cmp
+< exit42
+< include
+< inf.c
+< leak.sh
+< libmshell
+< Makefile
+< minishell
+< no_exec_perm
+< no_read_perm
+< obj
+< out
+< print_args
+< print.c
+< result
+< srcs
+< test2.sh
+< test.sh
+COMMAND
+ export
+ RESULT
+26c26
+< declare -x OLDPWD="/home/masahitoarai"
+---
+> declare -x OLDPWD
+34c34
+< declare -x SHLVL="3"
+---
+> declare -x SHLVL="2"
+59c59
+< declare -x _="/usr/bin/bash"
+---
+> declare -x _="./minishell"
+COMMAND
+ export nosuch
+ export | grep nosuch | sort
+ RESULT
+1d0
+< declare -x nosuch
+COMMAND
+ export nosuch=fuga
+ export | grep nosuch | sort
+ RESULT
+1d0
+< declare -x nosuch="fuga"
+COMMAND
+ export nosuch=fuga hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch="fuga"
+COMMAND
+ export [invalid] nosuch hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch [invalid] hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch hoge=nosuch [invalid]
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch="nosuch2=hoge"
+export $nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x nosuch2="hoge"
+< declare -x nosuch="nosuch2=hoge"
+COMMAND
+ unset fuga 
+ export | echo $fuga
+ RESULT
+1d0
+< 
+COMMAND
+ env
+ RESULT
+19d18
+< XDG_SESSION_DESKTOP=pop
+20a20
+> XDG_SESSION_DESKTOP=pop
+24d23
+< _=/usr/bin/env
+48c47
+< SHLVL=3
+---
+> SHLVL=2
+59d57
+< OLDPWD=/home/masahitoarai
+60a59
+> _=./minishell
+COMMAND
+ cd .. 
+ pwd 
+ echo $PWD $OLDPWD
+ RESULT
+2c2
+< /home/masahitoarai/Documents /home/masahitoarai/Documents/42_minishell
+---
+> /home/masahitoarai/Documents /home/masahitoarai/Documents
+COMMAND
+ cd /// 
+ pwd 
+ echo $PWD $OLDPWD
+ RESULT
+2d1
+< / /home/masahitoarai/Documents/42_minishell
+COMMAND
+ cd /tmp/// 
+ pwd 
+ echo $PWD $OLDPWD
+ RESULT
+2d1
+< /tmp /home/masahitoarai/Documents/42_minishell
+COMMAND
+ unset PWD 
+ cd 
+ echo $PWD 
+cd /tmp
+echo $PWD
+ RESULT
+1,2c1,2
+< /home/masahitoarai
+< /tmp
+---
+> 
+> 
+COMMAND
+ unset PWD
+cd
+echo $OLDPWD
+cd /tmp
+echo $OLDPWD
+ RESULT
+1d0
+< 
+2a2
+> echo $OLDPWD
+COMMAND
+ unset PWD
+cd
+export|grep PWD
+cd /tmp
+export|grep PWD
+ RESULT
+1,2d0
+< declare -x OLDPWD
+< declare -x OLDPWD="/home/masahitoarai"
+COMMAND
+ unset PWD
+cd
+env|grep PWD
+cd /tmp
+env|grep PWD
+ RESULT
+1d0
+< OLDPWD=/home/masahitoarai
+COMMAND
+ cat <<EOF
+hello
+world
+ RESULT
+0a1
+> 
+COMMAND
+ cat Makefile | grep minishell
+ RESULT
+1,18d0
+< NAME 		=	minishell
+< 	./minishell
+< 	valgrind --leak-check=full --show-leak-kinds=all -s -q ./minishell
+< 	valgrind --log-file="log/log.txt" --leak-check=full --show-leak-kinds=all -s -q ./minishell
+< # 	make -C minishell-tester
+< # 	./minishell
+< # 	make test -C minishell-tester
+< # 	make fclean -C minishell-tester
+< # 	make echo -C minishell-tester
+< # 	make exit -C minishell-tester
+< # 	make path -C minishell-tester
+< # 	make redirect -C minishell-tester
+< # 	make syntax_error -C minishell-tester
+< # 	make env -C minishell-tester
+< # 	make exp -C minishell-tester
+< # 	make pwd -C minishell-tester
+< # 	make simple -C minishell-tester
+< # 	make unset -C minishell-tester
+COMMAND
+ cat | cat | ls
+
+
+ RESULT
+1,19d0
+< a.out
+< cmp
+< exit42
+< include
+< inf.c
+< leak.sh
+< libmshell
+< Makefile
+< minishell
+< no_exec_perm
+< no_read_perm
+< obj
+< out
+< print_args
+< print.c
+< result
+< srcs
+< test2.sh
+< test.sh
+COMMAND
+ export
+ RESULT
+26c26
+< declare -x OLDPWD="/home/masahitoarai/Documents"
+---
+> declare -x OLDPWD
+34c34
+< declare -x SHLVL="3"
+---
+> declare -x SHLVL="2"
+59c59
+< declare -x _="/usr/bin/bash"
+---
+> declare -x _="./minishell"
+COMMAND
+ export nosuch
+ export | grep nosuch | sort
+ RESULT
+1d0
+< declare -x nosuch
+COMMAND
+ export nosuch=fuga
+ export | grep nosuch | sort
+ RESULT
+1d0
+< declare -x nosuch="fuga"
+COMMAND
+ export nosuch=fuga hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch="fuga"
+COMMAND
+ export [invalid] nosuch hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch [invalid] hoge=nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch hoge=nosuch [invalid]
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x hoge="nosuch"
+< declare -x nosuch
+COMMAND
+ export nosuch="nosuch2=hoge"
+export $nosuch
+ export | grep nosuch | sort
+ RESULT
+1,2d0
+< declare -x nosuch2="hoge"
+< declare -x nosuch="nosuch2=hoge"
+COMMAND
+ unset fuga 
+ export | echo $fuga
+ RESULT
+1d0
+< 
+COMMAND
+ env
+ RESULT
+19d18
+< XDG_SESSION_DESKTOP=pop
+20a20
+> XDG_SESSION_DESKTOP=pop
+24d23
+< _=/usr/bin/env
+48c47
+< SHLVL=3
+---
+> SHLVL=2
+59d57
+< OLDPWD=/home/masahitoarai/Documents
+60a59
+> _=./minishell
+COMMAND
+ unset PWD 
+ cd 
+ echo $PWD 
+cd /tmp
+echo $PWD
+ RESULT
+1,2c1,2
+< /home/masahitoarai
+< /tmp
+---
+> 
+> 
+COMMAND
+ unset PWD
+cd
+echo $OLDPWD
+cd /tmp
+echo $OLDPWD
+ RESULT
+1c1
+< 
+---
+> /home/masahitoarai/Documents/42_minishell
+COMMAND
  unset PWD
 cd
 export|grep PWD
